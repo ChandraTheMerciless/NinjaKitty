@@ -1,0 +1,34 @@
+{
+  "name": "ninja-kitty",
+  "version": "1.0.0",
+  "description": "Kitty that knows martial arts!",
+  "main": "src/index.js",
+  "dependencies": {
+    "http-server": "0.9.0",
+    "lodash": "4.17.4",
+    "phaser": "2.6.2"
+  },
+  "devDependencies": {
+    "babel-core": "6.22.1",
+    "babel-loader": "6.2.10",
+    "babel-preset-es2015": "6.22.0",
+    "copy-webpack-plugin": "4.0.1",
+    "uglify-loader": "1.4.0",
+    "webpack": "1.14.0"
+  },
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch",
+    "serve": "http-server -p 9000",
+    "dev": "npm run serve | npm run watch",
+    "start": "npm run build && npm run serve"
+  },
+  "keywords": [
+    "kitty",
+    "phaser",
+    "game",
+    "es6",
+    "javascript"
+  ],
+  "author": ""
+}
