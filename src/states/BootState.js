@@ -23,6 +23,7 @@ export default class BootState extends Phaser.State {
     }
 
     create() {
+        this.background = new Background(this.game);
         // this.game.state.start('main');
     }
 }
