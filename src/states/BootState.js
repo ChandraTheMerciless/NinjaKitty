@@ -14,7 +14,7 @@ export default class BootState extends Phaser.State {
     preload() {
         // this.game.load.atlasJSONHash('bunnyJumperSheet', 'assets/Player/cat_fighter_redsash.png', 'assets/Player/cat_fighter_redsash.json');
 
-        // Background.loadSkyImages(this.game);
+        Background.loadBackgroundImages(this.game);
 
         // Player.loadPlayerImage(this.game);
         // Player.loadSounds(this.game);
@@ -23,6 +23,6 @@ export default class BootState extends Phaser.State {
     }
 
     create() {
-        this.game.state.start('main');
+        // this.game.state.start('main');
     }
 }
