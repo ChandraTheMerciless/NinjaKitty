@@ -1,6 +1,6 @@
 import Background from '../objects/environment/Background';
 
-import Player from '../objects/player/Player';
+// import Player from '../objects/player/Player';
 
 export default class BootState extends Phaser.State {
     constructor() {
