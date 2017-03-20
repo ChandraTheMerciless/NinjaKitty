@@ -3,15 +3,16 @@ export default class Player extends Phaser.Sprite {
         super(game, x, y, 'cat_fighter_redsash');
 
         game.physics.arcade.enable(this);
-        this.body.gravity.y = 900;
-        this.anchor.setTo(.5, .5);
-        this.height = 64;
-        this.width = 48;
-        this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 70);
+        // this.body.gravity.y = 900;
+        // this.anchor.setTo(.5, .5);
+        // this.height = 64;
+        // this.width = 48;
+        // this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 70);
 
         // NOTE: figure out which images map to walking and standing cats
-        this.animations.add('stand', [0, 1], 5, true);
-        this.animations.add('walk', [2, 3], 10, true);
+        this.animations.add('stand', [0, 20, 0, 21], 10, true);
+        // this.animations.add('walk', [2, 3], 10, true);
+        this.animations.add('dance', [1, 2], 8, true);
 
         this.leftDir = this.scale.x * -1;
         this.rightDir = this.scale.x;
@@ -20,7 +21,7 @@ export default class Player extends Phaser.Sprite {
     };
 
     static loadPlayerImage(game) {
-        game.load.spritesheet('cat_fighter_redsash', 'assets/Player/cat_fighter_redsash.png', 150, 207);
+        game.load.spritesheet('cat_fighter_redsash', 'assets/Player/cat_fighter_redsash.png', 50, 50);
     };
 
     isMoving() {
