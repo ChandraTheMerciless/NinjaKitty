@@ -108,7 +108,8 @@ export default class Player extends Phaser.Sprite {
                 this.goLeft();
             } else if (cursors.right.isDown) {
                 this.goRight();
-            } else if (!this.jumping) {
+            }
+            else if (!this.jumping) {
                 this.stopMoving(delta);
             }
         }
@@ -124,6 +125,14 @@ export default class Player extends Phaser.Sprite {
 
         if(attackKeys.keyA.isDown) {
           this.animations.play('lowKick');
+        }
+
+        if(attackKeys.keyS.isDown) {
+          this.animations.play('middleKick');
+        }
+
+        if(attackKeys.keyD.isDown) {
+          this.animations.play('highKick');
         }
     };
 }
