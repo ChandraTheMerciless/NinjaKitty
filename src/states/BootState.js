@@ -1,8 +1,6 @@
 import Background from '../objects/environment/Background';
 import Player from '../objects/player/Player';
 
-// import Player from '../objects/player/Player';
-
 export default class BootState extends Phaser.State {
     constructor() {
         super();
@@ -13,8 +11,6 @@ export default class BootState extends Phaser.State {
      * Loads Enemy images, sky images, and Player images
      */
     preload() {
-
-
         Background.loadBackgroundImages(this.game);
 
         Player.loadPlayerImage(this.game);
@@ -24,32 +20,7 @@ export default class BootState extends Phaser.State {
     }
 
     create() {
-        // this.background = new Background(this.game);
-        // this.player = new Player(this.game, 10, 10);
-        // this.game.add.existing(this.player);
-        // this.game.camera.follow(this.player);
-
-
-
-        this.game.state.start('game');
+        this.game.state.start('main');
     }
 
-
-
-
-
-
-
-    // update() {
-    //   let deltaTime = this.getDeltaTime();
-    //   let cursors = this.game.input.keyboard.createCursorKeys();
-    //   this.player.updatePlayer(cursors, {}, deltaTime);
-    // };
-    //
-    // getDeltaTime() {
-    //     let elapsedTime = this.game.time.totalElapsedSeconds();
-    //     let deltaTime = elapsedTime - this.previousTime;
-    //     this.previousTime = elapsedTime;
-    //     return deltaTime;
-    // }
 }
