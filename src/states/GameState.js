@@ -12,7 +12,7 @@ export default class GameState extends Phaser.State {
 
     create() {
       this.background = new Background(this.game);
-      this.player = new Player(this.game, 10, 10);
+      this.player = new Player(this.game, 200, 300);
       this.game.add.existing(this.player);
       this.game.camera.follow(this.player);
     }
@@ -22,9 +22,18 @@ export default class GameState extends Phaser.State {
 
 
     update() {
+      const self = this;
+      
+      const attackKeys = {
+          keyA: self.game.input.keyboard.addKey(Phaser.Keyboard.A),
+          keyS: self.game.input.keyboard.addKey(Phaser.Keyboard.S),
+          keyD: self.game.input.keyboard.addKey(Phaser.Keyboard.D)
+      }
+
+
       let deltaTime = this.getDeltaTime();
       let cursors = this.game.input.keyboard.createCursorKeys();
-      this.player.updatePlayer(cursors, {}, deltaTime);
+      this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
     };
 
     getDeltaTime() {
