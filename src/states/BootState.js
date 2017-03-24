@@ -1,4 +1,5 @@
 import Background from '../objects/environment/Background';
+import BaseMenu from '../menus/BaseMenu';
 import Player from '../objects/player/Player';
 
 export default class BootState extends Phaser.State {
@@ -12,7 +13,7 @@ export default class BootState extends Phaser.State {
      */
     preload() {
         Background.loadBackgroundImages(this.game);
-
+        BaseMenu.loadMenuImages(this.game);
         Player.loadPlayerImage(this.game);
         // Player.loadSounds(this.game);
 
