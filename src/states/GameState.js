@@ -1,4 +1,5 @@
 import Background from '../objects/environment/Background';
+import { Platform, PlatformTypes, PlatformSubTypes } from '../objects/environment/Platform';
 import Player from '../objects/player/Player';
 
 export default class GameState extends Phaser.State {
@@ -12,6 +13,14 @@ export default class GameState extends Phaser.State {
 
     create() {
       this.background = new Background(this.game);
+
+      this.group_platforms = this.game.add.group();
+      this.group_platforms.enableBody = true;
+      for (let idx = 0; idx < 100; idx++) {
+          let x = 52 * idx, y = 576;
+          new Platform(this.game, x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
+      }
+
       this.player = new Player(this.game, 200, 300);
       this.game.add.existing(this.player);
       this.game.camera.follow(this.player);
