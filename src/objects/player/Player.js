@@ -13,7 +13,6 @@ export default class Player extends Phaser.Sprite {
         this.width = 80;
         this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 70);
 
-        // NOTE: figure out which images map to walking and standing cats
         this.animations.add('stand', [0, 20, 0, 21], 10, true);
         this.animations.add('walk', [0, 3, 4, 3], 10, true);
         this.animations.add('jumpingStart', [0, 7], 10, true);
@@ -110,7 +109,7 @@ export default class Player extends Phaser.Sprite {
 
     startAttacking(attack){
       this.attacking = true;
-      attack;
+      this.animations.play(attack);
       this.animations.currentAnim.onComplete.add(this.stopAttacking, this);
     };
 
@@ -119,11 +118,6 @@ export default class Player extends Phaser.Sprite {
     };
 
     _handleInput(cursors, attackKeys, contacts, delta) {
-
-
-
-      // NOTE: add another conditional after first option for else if (this.body.touching.down && this.attacking) to help prevent stopMoving override
-
 
         if (this.body.touching.down && this.jumping && !this.attacking) {
             this.jumping = false;
@@ -141,7 +135,6 @@ export default class Player extends Phaser.Sprite {
             }
         }
 
-        // if (cursors.up.isDown && this.body.touching.down && contacts) {
         if (cursors.up.isDown) {
             this.jump();
         }
@@ -156,22 +149,22 @@ export default class Player extends Phaser.Sprite {
         }
 
         if(attackKeys.keyS.isDown && !this.attacking) {
-          let middleKick = this.animations.play('middleKick');
+          let middleKick = 'middleKick';
           this.startAttacking(middleKick);
         }
 
         if(attackKeys.keyD.isDown && !this.attacking) {
-          let highKick = this.animations.play('highKick');
+          let highKick = 'highKick';
           this.startAttacking(highKick);
         }
 
         if(attackKeys.keyW.isDown && !this.attacking) {
-          let upperCut = this.animations.play('upperCut');
+          let upperCut = 'upperCut';
           this.startAttacking(upperCut);
         }
 
         if(attackKeys.keySpace.isDown && !this.attacking) {
-          let kamehameha = this.animations.play('kamehameha');
+          let kamehameha = 'kamehameha';
           this.startAttacking(kamehameha);
         }
     };
