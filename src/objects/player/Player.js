@@ -2,6 +2,10 @@ export default class Player extends Phaser.Sprite {
     constructor(game, x, y, lives = 5) {
         super(game, x, y, 'cat_fighter_redsash');
 
+
+        // NOTE: see how Holden implemented this.jumping, and THEN see about implementing a similar this.attacking for attack moves?
+
+
         game.physics.arcade.enable(this);
         // this.body.gravity.y = 400;
         this.anchor.setTo(.5, .5);
@@ -16,13 +20,18 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('jumpingAirborne', [29, 30], 10, true);
         this.animations.add('jumpingEnd', [7, 6, 7, 6], 10, true);
         this.animations.add('lowKick', [0, 40, 41, 42, 40, 0], 10, false);
-        this.animations.add('middleKick', [0, 40, 43, 44, 40, 0], 10, true);
-        this.animations.add('highKick', [0, 40, 45, 46, 40, 0], 10, true);
+        this.animations.add('middleKick', [0, 40, 43, 44, 40, 0], 10, false);
+        this.animations.add('highKick', [0, 40, 45, 46, 40, 0], 10, false);
+        this.animations.add('upperCut', [0, 4, 55, 56, 57, 58, 59], 10, false);
+        this.animations.add('kamehameha', [0, 10, 11, 12, 11, 12, 11, 12, 13, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15], 10, false);
         this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, true);
         this.animations.add('dance', [1, 2], 8, true);
 
         this.leftDir = this.scale.x * -1;
         this.rightDir = this.scale.x;
+
+        // this.jumping = true;
+        this.attacking = false;
 
         this.lives = lives;
     };
@@ -99,17 +108,35 @@ export default class Player extends Phaser.Sprite {
         }
     };
 
+    startAttacking(attack){
+      this.attacking = true;
+      attack;
+      this.animations.currentAnim.onComplete.add(this.stopAttacking, this);
+    };
+
+    stopAttacking(){
+      this.attacking = false;
+    };
+
     _handleInput(cursors, attackKeys, contacts, delta) {
-        if (this.body.touching.down && this.jumping) {
+
+
+
+      // NOTE: add another conditional after first option for else if (this.body.touching.down && this.attacking) to help prevent stopMoving override
+
+
+        if (this.body.touching.down && this.jumping && !this.attacking) {
             this.jumping = false;
             this.animations.play('stand');
+        } else if (attackKeys.keyA.isDown && !this.attacking) {
+          this.animations.play('lowKick');
         } else {
-            if (cursors.left.isDown) {
+            if (cursors.left.isDown && !this.attacking) {
                 this.goLeft();
-            } else if (cursors.right.isDown) {
+            } else if (cursors.right.isDown && !this.attacking) {
                 this.goRight();
             }
-            else if (!this.jumping) {
+            else if (!this.jumping && !this.attacking) {
                 this.stopMoving(delta);
             }
         }
@@ -123,16 +150,29 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if(attackKeys.keyA.isDown) {
-          this.animations.play('lowKick');
+        if(attackKeys.keyA.isDown && !this.attacking) {
+          let lowKick = this.animations.play('lowKick');
+          this.startAttacking(lowKick);
         }
 
-        if(attackKeys.keyS.isDown) {
-          this.animations.play('middleKick');
+        if(attackKeys.keyS.isDown && !this.attacking) {
+          let middleKick = this.animations.play('middleKick');
+          this.startAttacking(middleKick);
         }
 
-        if(attackKeys.keyD.isDown) {
-          this.animations.play('highKick');
+        if(attackKeys.keyD.isDown && !this.attacking) {
+          let highKick = this.animations.play('highKick');
+          this.startAttacking(highKick);
+        }
+
+        if(attackKeys.keyW.isDown && !this.attacking) {
+          let upperCut = this.animations.play('upperCut');
+          this.startAttacking(upperCut);
+        }
+
+        if(attackKeys.keySpace.isDown && !this.attacking) {
+          let kamehameha = this.animations.play('kamehameha');
+          this.startAttacking(kamehameha);
         }
     };
 }
