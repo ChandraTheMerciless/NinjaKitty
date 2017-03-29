@@ -5,13 +5,12 @@ export default class Player extends Phaser.Sprite {
 
         // NOTE: see how Holden implemented this.jumping, and THEN see about implementing a similar this.attacking for attack moves?
 
-
         game.physics.arcade.enable(this);
         this.body.gravity.y = 400;
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
-        this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 70);
+        this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 57);
 
         this.animations.add('stand', [0, 20, 0, 21], 10, true);
         this.animations.add('walk', [0, 3, 4, 3], 10, true);
@@ -29,7 +28,7 @@ export default class Player extends Phaser.Sprite {
         this.leftDir = this.scale.x * -1;
         this.rightDir = this.scale.x;
 
-        // this.jumping = true;
+        this.jumping = true;
         this.attacking = false;
 
         this.lives = lives;
@@ -135,7 +134,7 @@ export default class Player extends Phaser.Sprite {
             }
         }
 
-        if (cursors.up.isDown) {
+        if (cursors.up.isDown && !this.attacking) {
             this.jump();
         }
 
@@ -143,27 +142,27 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if(attackKeys.keyA.isDown && !this.attacking) {
+        if(attackKeys.keyA.isDown && !this.attacking && !this.jumping) {
           let lowKick = this.animations.play('lowKick');
           this.startAttacking(lowKick);
         }
 
-        if(attackKeys.keyS.isDown && !this.attacking) {
+        if(attackKeys.keyS.isDown && !this.attacking && !this.jumping) {
           let middleKick = 'middleKick';
           this.startAttacking(middleKick);
         }
 
-        if(attackKeys.keyD.isDown && !this.attacking) {
+        if(attackKeys.keyD.isDown && !this.attacking && !this.jumping) {
           let highKick = 'highKick';
           this.startAttacking(highKick);
         }
 
-        if(attackKeys.keyW.isDown && !this.attacking) {
+        if(attackKeys.keyW.isDown && !this.attacking && !this.jumping) {
           let upperCut = 'upperCut';
           this.startAttacking(upperCut);
         }
 
-        if(attackKeys.keySpace.isDown && !this.attacking) {
+        if(attackKeys.keySpace.isDown && !this.attacking && !this.jumping) {
           let kamehameha = 'kamehameha';
           this.startAttacking(kamehameha);
         }
