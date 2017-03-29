@@ -1,6 +1,7 @@
 import Background from '../objects/environment/Background';
 import { Platform, PlatformTypes, PlatformSubTypes } from '../objects/environment/Platform';
 import Player from '../objects/player/Player';
+import PhysicsService from './PhysicsService';
 
 export default class GameState extends Phaser.State {
     constructor() {
@@ -8,7 +9,7 @@ export default class GameState extends Phaser.State {
     }
 
     preload() {
-
+        this.game.world.resize(6016, this.game.world.height);
     }
 
     create() {
@@ -43,6 +44,9 @@ export default class GameState extends Phaser.State {
 
 
       let deltaTime = this.getDeltaTime();
+
+      let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
+
       let cursors = this.game.input.keyboard.createCursorKeys();
       this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
     };

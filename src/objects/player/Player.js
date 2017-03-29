@@ -7,7 +7,7 @@ export default class Player extends Phaser.Sprite {
 
 
         game.physics.arcade.enable(this);
-        // this.body.gravity.y = 400;
+        this.body.gravity.y = 400;
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
