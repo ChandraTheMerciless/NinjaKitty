@@ -14,18 +14,25 @@ export default class TongueMonster extends Enemy {
         this.animations.add('attacking', [8, 9, 10, 11, 12], 10, true);
         this.animations.add('exploding', [16, 17, 18, 19, 20, 21, 22, 23], 10, false);
 
-        // this.animations.add('roll', [0, 1], 10, true);
-        // this.animations.play('roll');
+        // this.animations.play('flapping');
 
         this.touchDamage = 5;
         this.speedX = 75;
         this.direction = -1;
-        this.body.velocity.x = -this.speedX;
+        // this.body.velocity.x = -this.speedX;
     };
 
     static loadTongueMonsterImage(game) {
-        game.load.spritesheet('tongue_monster', 'assets/Enemies/monster_tongue.png', 122, 139); // 480 x 159
+        game.load.spritesheet('tongue_monster', 'assets/Enemies/monster_tongue.png', 64, 64); // 480 x 159
     }
+
+    updateEnemy(){
+      super.updateEnemy();
+
+      this.animations.play('flapping');
+
+      console.log("yolo from tongue monster?");
+    };
 
 
 }

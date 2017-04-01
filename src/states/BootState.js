@@ -1,6 +1,7 @@
 import Background from '../objects/environment/Background';
 import BaseMenu from '../menus/BaseMenu';
 import Player from '../objects/player/Player';
+import TongueMonster from '../objects/enemies/TongueMonster';
 
 export default class BootState extends Phaser.State {
     constructor() {
@@ -16,6 +17,7 @@ export default class BootState extends Phaser.State {
         Background.loadBackgroundImages(this.game);
         BaseMenu.loadMenuImages(this.game);
         Player.loadPlayerImage(this.game);
+        TongueMonster.loadTongueMonsterImage(this.game);
         // Player.loadSounds(this.game);
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);

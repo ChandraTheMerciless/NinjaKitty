@@ -2,6 +2,7 @@ import Background from '../objects/environment/Background';
 import { Platform, PlatformTypes, PlatformSubTypes } from '../objects/environment/Platform';
 import { Tree, TreeTypes } from '../objects/environment/Tree';
 import Player from '../objects/player/Player';
+import TongueMonster from '../objects/enemies/TongueMonster';
 import PhysicsService from './PhysicsService';
 
 export default class GameState extends Phaser.State {
@@ -11,6 +12,8 @@ export default class GameState extends Phaser.State {
 
     preload() {
         this.game.world.resize(6016, this.game.world.height);
+
+        this.enemies = [];
     }
 
     create() {
@@ -30,6 +33,7 @@ export default class GameState extends Phaser.State {
       }
 
       this.player = new Player(this.game, 200, 300);
+      this.enemies.push(new TongueMonster(this.game, 200, 300));
       this.game.add.existing(this.player);
       this.game.camera.follow(this.player);
     }
@@ -56,6 +60,12 @@ export default class GameState extends Phaser.State {
 
       let cursors = this.game.input.keyboard.createCursorKeys();
       this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+      // this.enemies["TongueMonster"].updateEnemy();
+
+      for(let i = 0; i < this.enemies.length; i++){
+        this.enemies[i].updateEnemy();
+      };
+
     };
 
     getDeltaTime() {
