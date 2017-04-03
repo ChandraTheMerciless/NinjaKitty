@@ -17,20 +17,7 @@ export default class GameState extends Phaser.State {
     }
 
     create() {
-      this.background = new Background(this.game);
-
-      this.group_trees = this.game.add.group();
-      for (let idx = 0; idx < 50; idx++) {
-          let x = 200 * idx, y = 350;
-          new Tree(this.game, x, y, idx%2 == 0 ? TreeTypes.FULL_PINE : TreeTypes.TOP_HALF_PINE, this.group_trees);
-      }
-
-      this.group_platforms = this.game.add.group();
-      this.group_platforms.enableBody = true;
-      for (let idx = 0; idx < 150; idx++) {
-          let x = 45 * idx, y = 576;
-          new Platform(this.game, x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
-      }
+      this.createBackground();
 
       this.player = new Player(this.game, 200, 300);
       this.enemies.push(new TongueMonster(this.game, 200, 300));
@@ -38,9 +25,25 @@ export default class GameState extends Phaser.State {
       this.game.camera.follow(this.player);
     }
 
+    createBackground() {
+      this.background = new Background(this.game);
 
+      this.group_trees = this.game.add.group();
+      new Tree(this.game, -140, 350, TreeTypes.FULL_PINE, this.group_trees);
+      for (let idx = 0; idx < 50; idx++) {
+          let x = 200 * idx, y = 350;
+          let jitter = this.randomIntFromInterval(25, 75);
+          new Tree(this.game, x+jitter, y, jitter%2 == 0 ? TreeTypes.FULL_PINE : TreeTypes.TOP_HALF_PINE, this.group_trees);
+      }
 
-
+      this.group_platforms = this.game.add.group();
+      new Platform(this.game, -53, 576, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
+      this.group_platforms.enableBody = true;
+      for (let idx = 0; idx < 150; idx++) {
+          let x = 53 * idx, y = 576;
+          new Platform(this.game, x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
+      }
+    }
 
     update() {
       const self = this;
@@ -73,5 +76,9 @@ export default class GameState extends Phaser.State {
         let deltaTime = elapsedTime - this.previousTime;
         this.previousTime = elapsedTime;
         return deltaTime;
+    }
+
+    randomIntFromInterval(min, max) {
+      return Math.floor(Math.random()*(max-min+1)+min);
     }
   }

@@ -6,6 +6,9 @@ export default class BaseMenu {
     updateMenu(cursors, deltaTime) { }
 
     kill() {
+        if (this.menu_title) {
+            this.menu_title.destroy();
+        }
         this.group_buttons.destroy();
     }
 
