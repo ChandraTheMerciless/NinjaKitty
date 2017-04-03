@@ -33,7 +33,7 @@ export default class GameState extends Phaser.State {
       }
 
       this.player = new Player(this.game, 200, 300);
-      this.enemies.push(new TongueMonster(this.game, 200, 300));
+      this.enemies.push(new TongueMonster(this.game, 400, 540));
       this.game.add.existing(this.player);
       this.game.camera.follow(this.player);
     }
@@ -60,12 +60,9 @@ export default class GameState extends Phaser.State {
 
       let cursors = this.game.input.keyboard.createCursorKeys();
       this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
-      // this.enemies["TongueMonster"].updateEnemy();
 
-      for(let i = 0; i < this.enemies.length; i++){
-        this.enemies[i].updateEnemy();
-      };
-
+      this.getEnemies();
+      this.makeEnemiesChasePlayer();
     };
 
     getDeltaTime() {
@@ -73,5 +70,20 @@ export default class GameState extends Phaser.State {
         let deltaTime = elapsedTime - this.previousTime;
         this.previousTime = elapsedTime;
         return deltaTime;
-    }
+    };
+
+    getEnemies(){
+        for(let i = 0; i < this.enemies.length; i++){
+            this.enemies[i].updateEnemy();
+        };
+    };
+
+    makeEnemiesChasePlayer(){
+        for(let i = 0; i < this.enemies.length; i++){
+            const distance = this.physics.arcade.distanceBetween(this.enemies[i], this.player);
+            if(distance < 200){
+                this.physics.arcade.moveToObject(this.enemies[i], this.player, 100);
+            }
+        };
+    };
   }

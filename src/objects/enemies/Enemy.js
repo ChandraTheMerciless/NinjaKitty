@@ -10,15 +10,23 @@ export default class Enemy extends Phaser.Sprite {
 
         this.touchDamage = 0;
         this.doesDamage = true;
-
-        // if (DebugService.isInDebugMode()) {
-        //     this.debugGraphics = new DebugGraphicsObjectSquare(game);
-        // }
     }
 
     updateEnemy() {
-        // if (this.debugGraphics) {
-        //     this.debugGraphics.render(this.body);
-        // }
+        this.facePlayer();
+    }
+
+    facePlayer() {
+        // this.direction *= -1;
+        // this.body.velocity.x = this.direction * this.moveSpeed;
+        const velocity = this.body.velocity.x;
+
+        console.log(this.scale);
+
+        if(velocity < 0){
+            this.scale.x = -2;
+        } else {
+            this.scale.x = 2;
+        }
     }
 }

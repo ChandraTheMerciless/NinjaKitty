@@ -2,15 +2,13 @@ export default class Player extends Phaser.Sprite {
     constructor(game, x, y, lives = 5) {
         super(game, x, y, 'cat_fighter_redsash');
 
-
-        // NOTE: see how Holden implemented this.jumping, and THEN see about implementing a similar this.attacking for attack moves?
-
         game.physics.arcade.enable(this);
         this.body.gravity.y = 400;
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
         this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 57);
+        this.body.collideWorldBounds = true;
 
         this.animations.add('stand', [0, 20, 0, 21], 10, true);
         this.animations.add('walk', [0, 3, 4, 3], 10, true);
