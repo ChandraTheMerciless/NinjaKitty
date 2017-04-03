@@ -59,11 +59,9 @@ export default class Player extends Phaser.Sprite {
         this.body.velocity.y = velocity;
         this.frame = this.jumpFrame;
         this.jumping = true;
-        if(this.body.touching.down) {
-          this.animations.play('jumpingStart');
-        } else {
-          this.animations.play('jumpingAirborne');
-        }
+
+        this.animations.play('jumpingAirborne');
+
         // this.jumpSound.play();
     }
 
@@ -132,7 +130,7 @@ export default class Player extends Phaser.Sprite {
             }
         }
 
-        if (cursors.up.isDown && !this.attacking) {
+        if (cursors.up.isDown && !this.attacking && this.body.touching.down) {
             this.jump();
         }
 
