@@ -53,7 +53,5 @@ export default class MenuGameState extends Phaser.State {
         let cursors = this.game.input.keyboard.createCursorKeys();
 
         this.currentMenu.updateMenu(cursors, deltaTime);
-
-        // this.background.update(false, 0, deltaTime);
     }
 }
