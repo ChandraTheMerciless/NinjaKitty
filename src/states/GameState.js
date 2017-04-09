@@ -8,6 +8,9 @@ import {
     Tree,
     TreeTypes
 } from '../objects/environment/Tree';
+import {
+  Cloud
+} from '../objects/environment/Cloud';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
 import PhysicsService from './PhysicsService';
@@ -24,7 +27,7 @@ export default class GameState extends Phaser.State {
     }
 
     create() {
-        this.createBackground();
+        this.createEnvironment();
 
         this.player = new Player(this.game, 200, 300);
         this.enemies.push(new TongueMonster(this.game, 500, 530));
@@ -32,25 +35,32 @@ export default class GameState extends Phaser.State {
         this.game.camera.follow(this.player);
     }
 
-    createBackground() {
+    createEnvironment() {
         this.background = new Background(this.game);
 
+        this.group_clouds = this.game.add.group();
+        for (let idx = 0; idx < 50; idx++) {
+            let jitter = this.getRandomIntFromInterval(10, 120, false),
+                x = 200 * idx,
+                y = 100 + jitter,
+                cloudIndex = this.getRandomIntFromInterval(1, 9);
+            new Cloud(this.game, x, y, this.group_clouds, cloudIndex - 1);
+        }
+
         this.group_trees = this.game.add.group();
-        new Tree(this.game, -140, 350, TreeTypes.FULL_PINE, this.group_trees);
         for (let idx = 0; idx < 50; idx++) {
             let x = 200 * idx,
-                y = 350;
-            let jitter = this.randomIntFromInterval(25, 75);
-            new Tree(this.game, x + jitter, y, jitter % 2 == 0 ? TreeTypes.FULL_PINE : TreeTypes.TOP_HALF_PINE, this.group_trees);
+                y = 350,
+                jitter = this.getRandomIntFromInterval(25, 75);
+            new Tree(this.game, -200 + x + jitter, y, jitter % 2 == 0 ? TreeTypes.FULL_PINE : TreeTypes.TOP_HALF_PINE, this.group_trees);
         }
 
         this.group_platforms = this.game.add.group();
-        new Platform(this.game, -53, 576, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
         this.group_platforms.enableBody = true;
         for (let idx = 0; idx < 150; idx++) {
             let x = 53 * idx,
                 y = 576;
-            new Platform(this.game, x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
+            new Platform(this.game, -75 + x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
         }
     }
 
@@ -99,7 +109,12 @@ export default class GameState extends Phaser.State {
         };
     };
 
-    randomIntFromInterval(min, max) {
-        return Math.floor(Math.random() * (max - min + 1) + min);
+    getRandomIntFromInterval(min, max, positiveOnly = true) {
+        if (positiveOnly) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        } else {
+            let random = Math.floor(Math.random() * (max - min + 1) + min);
+            return random % 2 == 0 ? random : 0 - random;
+        }
     }
 }
