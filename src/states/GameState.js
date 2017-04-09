@@ -13,6 +13,7 @@ import {
 } from '../objects/environment/Cloud';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
+import BounceMonster from '../objects/enemies/BounceMonster';
 import PhysicsService from './PhysicsService';
 
 export default class GameState extends Phaser.State {
@@ -31,6 +32,7 @@ export default class GameState extends Phaser.State {
 
         this.player = new Player(this.game, 200, 300);
         this.enemies.push(new TongueMonster(this.game, 500, 540));
+        this.enemies.push(new BounceMonster(this.game, 700, 540));
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
