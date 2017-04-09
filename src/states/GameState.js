@@ -11,6 +11,9 @@ import {
 import {
   Cloud
 } from '../objects/environment/Cloud';
+import {
+  Catnip
+} from '../objects/items/Catnip';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
 import PhysicsService from './PhysicsService';
@@ -28,6 +31,7 @@ export default class GameState extends Phaser.State {
 
     create() {
         this.createEnvironment();
+        this.createItems();
 
         this.player = new Player(this.game, 200, 300);
         this.enemies.push(new TongueMonster(this.game, 500, 540));
@@ -44,7 +48,7 @@ export default class GameState extends Phaser.State {
                 x = 200 * idx,
                 y = 100 + jitter,
                 cloudIndex = this.getRandomIntFromInterval(1, 9);
-            new Cloud(this.game, x, y, this.group_clouds, cloudIndex - 1);
+            new Cloud(this.game, x, y, cloudIndex - 1, this.group_clouds);
         }
 
         this.group_trees = this.game.add.group();
@@ -64,6 +68,11 @@ export default class GameState extends Phaser.State {
         }
     }
 
+    createItems() {
+        this.items = [];
+        this.items.push(new Catnip(this.game, 50, 520));
+    }
+
     update() {
         const self = this;
 
@@ -80,13 +89,17 @@ export default class GameState extends Phaser.State {
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
         let touchEnemies = PhysicsService.collideGroups(this.game, this.player, this.enemies);
-
-        let cursors = this.game.input.keyboard.createCursorKeys();
-        this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+        let hitItems = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.items, this.player);
+        for (let item of hitItems) {
+            item.touchItem(this.player, this.game);
+        }
 
         this.getEnemies();
         this.makeEnemiesChasePlayer();
         this.handleEnemiesHitPlayer();
+
+        let cursors = this.game.input.keyboard.createCursorKeys();
+        this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
     };
 
     getDeltaTime() {
