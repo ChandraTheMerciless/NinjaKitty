@@ -7,7 +7,7 @@ export default class Player extends Phaser.Sprite {
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
-        this.body.setSize(this.body.width - 30, this.body.height - 70, 15, 57);
+        this.body.setSize(this.body.width - 30, this.body.height - 60, 15, 47);
         this.body.collideWorldBounds = true;
 
         this.animations.add('stand', [0, 20, 0, 21], 10, true);
@@ -110,6 +110,43 @@ export default class Player extends Phaser.Sprite {
 
     stopAttacking(){
       this.attacking = false;
+    };
+
+    touchHurtPlayer(enemy) {
+        if (enemy.doesDamage) {
+            // if (this.powerUpComponent && this.powerUpComponent.takeHit) {
+            //     this._powerUpTakeHit();
+            // }
+            // else {
+                let direction = this.body.x - enemy.body.x; // negative is left
+                this.body.velocity.x = 150 * (direction / Math.abs(direction));
+
+                this.body.velocity.y = -150;
+                this.body.bounce.y = 0.2;
+                this._hurtPlayer(enemy.touchDamage);
+            // }
+        }
+    };
+
+    _updateHealth(changeInHealth) {
+        this.health += changeInHealth;
+        if (this.health <= 0) {
+            this.health = 0;
+            console.log("Oh noez :(");
+        }
+        this.health = this.health > 10 ? 10 : this.health;
+        // this.HUD.updateHealth(this.health);
+    };
+
+    _hurtPlayer(damage) {
+        this.hurtTimer = 0;
+        this.isHurt = true;
+        this.moveEnabled = false;
+
+        this.animations.stop();
+        this.frame = this.hurtFrame;
+
+        this._updateHealth(-damage);
     };
 
     _handleInput(cursors, attackKeys, contacts, delta) {

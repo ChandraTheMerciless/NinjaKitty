@@ -6,7 +6,8 @@ export default class TongueMonster extends Enemy {
 
         this.height = 128;
         this.width = 128;
-        //this.body.setSize(this.body.width - 40, this.body.height, 20, 0);
+
+        this.body.setSize(this.body.width - 35, this.body.height, 20, 15);
         this.body.collideWorldBounds = true;
 
 
@@ -34,14 +35,6 @@ export default class TongueMonster extends Enemy {
 
         this.animations.play('flapping');
     };
-
-    // flipDirection() {
-    //     this.direction *= -1;
-    //     this.body.velocity.x = this.direction * this.moveSpeed;
-    //     this.scale.x *= -1;
-    // }
-
-
 
 
 }

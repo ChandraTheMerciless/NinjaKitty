@@ -27,7 +27,7 @@ export default class GameState extends Phaser.State {
         this.createBackground();
 
         this.player = new Player(this.game, 200, 300);
-        this.enemies.push(new TongueMonster(this.game, 500, 530));
+        this.enemies.push(new TongueMonster(this.game, 500, 540));
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
@@ -69,12 +69,14 @@ export default class GameState extends Phaser.State {
         let deltaTime = this.getDeltaTime();
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
+        let touchEnemies = PhysicsService.collideGroups(this.game, this.player, this.enemies);
 
         let cursors = this.game.input.keyboard.createCursorKeys();
         this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
 
         this.getEnemies();
         this.makeEnemiesChasePlayer();
+        this.handleEnemiesHitPlayer();
     };
 
     getDeltaTime() {
@@ -102,4 +104,19 @@ export default class GameState extends Phaser.State {
     randomIntFromInterval(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);
     }
+
+    handleEnemiesHitPlayer() {
+        let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        if (hitEnemies[0]) {
+            this.player.touchHurtPlayer(hitEnemies[0]);
+        } else {
+            for (let enemy of this.enemies) {
+                if (enemy.emitterComponent && enemy.emitterComponent.particlesDoDamage &&
+                    PhysicsService.overlapGroups(this.game, enemy.emitterComponent, this.player, null, this.player.canBeHurt, this.player)) {
+                    this.player.hazardHurtPlayer(enemy.emitterComponent.particleDamage);
+                    break;
+                }
+            }
+        }
+    };
 }

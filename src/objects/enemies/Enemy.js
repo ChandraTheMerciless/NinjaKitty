@@ -21,8 +21,6 @@ export default class Enemy extends Phaser.Sprite {
         // this.body.velocity.x = this.direction * this.moveSpeed;
         const velocity = this.body.velocity.x;
 
-        console.log(this.scale);
-
         if(velocity < 0){
             this.scale.x = -2;
         } else {
