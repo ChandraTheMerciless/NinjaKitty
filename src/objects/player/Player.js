@@ -21,13 +21,14 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('upperCut', [0, 4, 55, 56, 57, 58, 59], 10, false);
         this.animations.add('kamehameha', [0, 10, 11, 12, 11, 12, 11, 12, 13, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15], 10, false);
         this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, true);
-        this.animations.add('dance', [1, 2], 8, true);
+        this.animations.add('dance', [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], 8, false);
 
         this.leftDir = this.scale.x * -1;
         this.rightDir = this.scale.x;
 
         this.jumping = true;
         this.attacking = false;
+        this.isHigh = false;
 
         this.lives = lives;
     };
@@ -112,6 +113,10 @@ export default class Player extends Phaser.Sprite {
       this.attacking = false;
     };
 
+    stopBeingHigh() {
+      this.isHigh = false;
+    }
+
     touchHurtPlayer(enemy) {
         if (enemy.doesDamage) {
             // if (this.powerUpComponent && this.powerUpComponent.takeHit) {
@@ -127,6 +132,13 @@ export default class Player extends Phaser.Sprite {
             // }
         }
     };
+
+    getHigh() {
+        this.isHigh = true;
+        this.body.velocity.x = 0;
+        this.animations.play('dance');
+        this.animations.currentAnim.onComplete.add(this.stopBeingHigh, this);
+    }
 
     _updateHealth(changeInHealth) {
         this.health += changeInHealth;
@@ -151,23 +163,23 @@ export default class Player extends Phaser.Sprite {
 
     _handleInput(cursors, attackKeys, contacts, delta) {
 
-        if (this.body.touching.down && this.jumping && !this.attacking) {
+        if (this.body.touching.down && this.jumping && !this.attacking && !this.isHigh) {
             this.jumping = false;
             this.animations.play('stand');
-        } else if (attackKeys.keyA.isDown && !this.attacking) {
+        } else if (attackKeys.keyA.isDown && !this.attacking && !this.isHigh) {
           this.animations.play('lowKick');
         } else {
-            if (cursors.left.isDown && !this.attacking) {
+            if (cursors.left.isDown && !this.attacking && !this.isHigh) {
                 this.goLeft();
-            } else if (cursors.right.isDown && !this.attacking) {
+            } else if (cursors.right.isDown && !this.attacking && !this.isHigh) {
                 this.goRight();
             }
-            else if (!this.jumping && !this.attacking) {
+            else if (!this.jumping && !this.attacking && !this.isHigh) {
                 this.stopMoving(delta);
             }
         }
 
-        if (cursors.up.isDown && !this.attacking && this.body.touching.down) {
+        if (this.body.touching.down && cursors.up.isDown && !this.attacking && !this.isHigh) {
             this.jump();
         }
 
@@ -175,27 +187,27 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if(attackKeys.keyA.isDown && !this.attacking && !this.jumping) {
+        if(attackKeys.keyA.isDown && !this.attacking && !this.jumping && !this.isHigh) {
           let lowKick = this.animations.play('lowKick');
           this.startAttacking(lowKick);
         }
 
-        if(attackKeys.keyS.isDown && !this.attacking && !this.jumping) {
+        if(attackKeys.keyS.isDown && !this.attacking && !this.jumping && !this.isHigh) {
           let middleKick = 'middleKick';
           this.startAttacking(middleKick);
         }
 
-        if(attackKeys.keyD.isDown && !this.attacking && !this.jumping) {
+        if(attackKeys.keyD.isDown && !this.attacking && !this.jumping && !this.isHigh) {
           let highKick = 'highKick';
           this.startAttacking(highKick);
         }
 
-        if(attackKeys.keyW.isDown && !this.attacking && !this.jumping) {
+        if(attackKeys.keyW.isDown && !this.attacking && !this.jumping && !this.isHigh) {
           let upperCut = 'upperCut';
           this.startAttacking(upperCut);
         }
 
-        if(attackKeys.keySpace.isDown && !this.attacking && !this.jumping) {
+        if(attackKeys.keySpace.isDown && !this.attacking && !this.jumping  && !this.isHigh) {
           let kamehameha = 'kamehameha';
           this.startAttacking(kamehameha);
         }
