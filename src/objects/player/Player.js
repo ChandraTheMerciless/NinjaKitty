@@ -120,7 +120,7 @@ export default class Player extends Phaser.Sprite {
     }
 
     touchHurtPlayer(enemy) {
-        if (enemy.doesDamage) {
+        // if (enemy.doesDamage) {
             // if (this.powerUpComponent && this.powerUpComponent.takeHit) {
             //     this._powerUpTakeHit();
             // }
@@ -130,9 +130,14 @@ export default class Player extends Phaser.Sprite {
 
             this.body.velocity.y = -150;
             this.body.bounce.y = 0.2;
+            this.body.bounce.x = 3;
             this._hurtPlayer(enemy.touchDamage);
+            // debugger;
             // }
-        }
+
+            console.log("ouch from touchHurtPlayer :(");
+            this.animations.play("playDead");
+        // }
     };
 
     getHigh() {
@@ -152,22 +157,30 @@ export default class Player extends Phaser.Sprite {
     };
 
     canBeHurt() {
-        this.handleCharacterHurtDisplay();
-        this.returnHurt();
+        // this.handleCharacterHurtDisplay();
+        // this.returnHurt();
+        console.log("ouch from canBeHurt :(");
+        return !this.isHurt;
     }
 
-    returnHurt() {
-        return !this.isHurt;
-    };
+    // returnHurt() {
+        // return !this.isHurt;
+    // };
 
-    handleCharacterHurtDisplay() {
-        this.body.velocity.setTo(-600, 300);
-        this.animations.play("playDead");
-    };
+    // handleCharacterHurtDisplay() {
+    //     // let direction = this.body.x - enemy.body.x; // negative is left
+    //     // this.body.velocity.x = 150 * (direction / Math.abs(direction));
+    //     //
+    //     // this.body.velocity.y = -150;
+    //     // this.body.bounce.y = 0.2;
+    //     //
+    //     // // this.body.velocity.setTo(-600, 300);
+    //     // this.animations.play("playDead");
+    // };
 
     _hurtPlayer(damage) {
         this.hurtTimer = 0;
-        this.isHurt = true;
+        // this.isHurt = true;
         this.moveEnabled = false;
 
         this.animations.stop();

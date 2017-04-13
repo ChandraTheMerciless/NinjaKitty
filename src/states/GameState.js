@@ -136,9 +136,11 @@ export default class GameState extends Phaser.State {
     }
 
     handleEnemiesHitPlayer() {
-        let hitEnemies = PhysicsService.collideGroups(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
-        // let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        // let hitEnemies = PhysicsService.collideGroups(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        console.log(hitEnemies);
         if (hitEnemies[0]) {
+          // debugger;
             this.player.touchHurtPlayer(hitEnemies[0]);
         } else {
             for (let enemy of this.enemies) {
