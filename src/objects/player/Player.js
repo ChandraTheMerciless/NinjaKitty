@@ -1,3 +1,5 @@
+import HUD from '../hud/HUD.js';
+
 export default class Player extends Phaser.Sprite {
     constructor(game, x, y, lives = 5) {
         super(game, x, y, 'cat_fighter_redsash');
@@ -30,9 +32,12 @@ export default class Player extends Phaser.Sprite {
         this.attacking = false;
         this.isHigh = false;
         this.isHurt = false;
-        this.health = 20;
+        this.health = 100;
 
         this.lives = lives;
+
+        this.HUD = new HUD(game);
+        this.HUD.updateHealth(this.health);
     };
 
     static loadPlayerImage(game) {
@@ -135,7 +140,6 @@ export default class Player extends Phaser.Sprite {
             // debugger;
             // }
 
-            console.log("ouch from touchHurtPlayer :(");
             this.animations.play("playDead");
         // }
     };
@@ -152,14 +156,13 @@ export default class Player extends Phaser.Sprite {
         if (this.health <= 0) {
             this.health = 0;
         }
-        this.health = this.health > 10 ? 10 : this.health;
-        // this.HUD.updateHealth(this.health);
+        this.health = this.health > 100 ? 100 : this.health;
+        this.HUD.updateHealth(this.health);
     };
 
     canBeHurt() {
         // this.handleCharacterHurtDisplay();
         // this.returnHurt();
-        console.log("ouch from canBeHurt :(");
         return !this.isHurt;
     }
 

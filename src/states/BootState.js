@@ -25,7 +25,6 @@ export default class BootState extends Phaser.State {
         Player.loadPlayerImage(this.game);
         TongueMonster.loadTongueMonsterImage(this.game);
         BounceMonster.loadBounceMonsterImage(this.game);
-        // Player.loadSounds(this.game);
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
     }

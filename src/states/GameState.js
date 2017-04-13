@@ -68,7 +68,10 @@ export default class GameState extends Phaser.State {
 
     createItems() {
         this.items = [];
-        this.items.push(new Catnip(this.game, 50, 520));
+        for (let idx = 0; idx < 20; idx++) {
+            let x = 600 * idx + this.getRandomIntFromInterval(100, 400, false);
+            this.items.push(new Catnip(this.game, x, 520));
+        }
     }
 
     update() {
@@ -138,9 +141,7 @@ export default class GameState extends Phaser.State {
     handleEnemiesHitPlayer() {
         // let hitEnemies = PhysicsService.collideGroups(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
         let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
-        console.log(hitEnemies);
         if (hitEnemies[0]) {
-          // debugger;
             this.player.touchHurtPlayer(hitEnemies[0]);
         } else {
             for (let enemy of this.enemies) {
