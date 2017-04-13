@@ -7,7 +7,7 @@ export default class Player extends Phaser.Sprite {
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
-        this.body.setSize(this.body.width - 30, this.body.height - 60, 15, 47);
+        this.body.setSize(this.body.width-30, this.body.height-20, 14, 10);
         this.body.collideWorldBounds = true;
 
         this.animations.add('stand', [0, 20, 0, 21], 10, true);

@@ -1,5 +1,5 @@
 import Background from '../objects/environment/Background';
-import { Cloud } from '../objects/environment/Cloud';
+import Cloud from '../objects/environment/Cloud';
 import BaseMenu from '../menus/BaseMenu';
 import MainMenu from '../menus/MainMenu';
 import Player from '../objects/player/Player';

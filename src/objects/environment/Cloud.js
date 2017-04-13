@@ -1,4 +1,4 @@
-export class Cloud extends Phaser.Sprite {
+export default class Cloud extends Phaser.Sprite {
     constructor(game, x, y, index = 0, owningGroup = null) {
         super(game, x, y, 'cloud_sheet', index);
 

@@ -44,6 +44,7 @@ export class Platform extends Phaser.Sprite {
 
         this.height = 60;
         this.width = 60;
+        this.body.setSize(this.body.width, this.body.height, 0, 2);
         this.body.immovable = true;
     }
 }

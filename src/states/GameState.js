@@ -8,12 +8,8 @@ import {
     Tree,
     TreeTypes
 } from '../objects/environment/Tree';
-import {
-  Cloud
-} from '../objects/environment/Cloud';
-import {
-  Catnip
-} from '../objects/items/Catnip';
+import Cloud from '../objects/environment/Cloud';
+import Catnip from '../objects/items/Catnip';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
 import BounceMonster from '../objects/enemies/BounceMonster';
@@ -86,7 +82,6 @@ export default class GameState extends Phaser.State {
             keySpace: self.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
         }
 
-
         let deltaTime = this.getDeltaTime();
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
@@ -102,6 +97,11 @@ export default class GameState extends Phaser.State {
 
         let cursors = this.game.input.keyboard.createCursorKeys();
         this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+
+        //for debugging hitboxes (puts a green box behind the sprite showing the hitbox)
+        this.game.debug.body(this.player);
+        this.game.debug.body(this.enemies[0]);
+        this.game.debug.body(this.enemies[1]);
     };
 
     getDeltaTime() {
