@@ -85,7 +85,7 @@ export default class GameState extends Phaser.State {
         let deltaTime = this.getDeltaTime();
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
-        let touchEnemies = PhysicsService.collideGroups(this.game, this.player, this.enemies);
+        // let touchEnemies = PhysicsService.collideGroups(this.game, this.player, this.enemies);
         let hitItems = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.items, this.player);
         for (let item of hitItems) {
             item.touchItem(this.player, this.game);
@@ -136,7 +136,8 @@ export default class GameState extends Phaser.State {
     }
 
     handleEnemiesHitPlayer() {
-        let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        let hitEnemies = PhysicsService.collideGroups(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
+        // let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
         if (hitEnemies[0]) {
             this.player.touchHurtPlayer(hitEnemies[0]);
         } else {

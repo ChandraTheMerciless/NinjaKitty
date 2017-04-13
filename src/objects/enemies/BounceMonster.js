@@ -8,7 +8,7 @@ export default class BounceMonster extends Enemy {
         this.width = 128;
         this.body.gravity.y = 400;
 
-        this.body.setSize(this.body.width - 35, this.body.height, 20, 0);
+        this.body.setSize(this.body.width - 35, this.body.height - 10, 20, 10);
         this.body.collideWorldBounds = true;
 
 

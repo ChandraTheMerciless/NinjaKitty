@@ -7,7 +7,7 @@ export default class Player extends Phaser.Sprite {
         this.anchor.setTo(.5, .5);
         this.height = 80;
         this.width = 80;
-        this.body.setSize(this.body.width-30, this.body.height-20, 14, 10);
+        this.body.setSize(this.body.width - 30, this.body.height - 20, 14, 10);
         this.body.collideWorldBounds = true;
 
         this.animations.add('stand', [0, 20, 0, 21], 10, true);
@@ -20,7 +20,7 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('highKick', [0, 40, 45, 46, 40, 0], 10, false);
         this.animations.add('upperCut', [0, 4, 55, 56, 57, 58, 59], 10, false);
         this.animations.add('kamehameha', [0, 10, 11, 12, 11, 12, 11, 12, 13, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15], 10, false);
-        this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, true);
+        this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, false);
         this.animations.add('dance', [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], 8, false);
 
         this.leftDir = this.scale.x * -1;
@@ -29,6 +29,8 @@ export default class Player extends Phaser.Sprite {
         this.jumping = true;
         this.attacking = false;
         this.isHigh = false;
+        this.isHurt = false;
+        this.health = 20;
 
         this.lives = lives;
     };
@@ -103,18 +105,18 @@ export default class Player extends Phaser.Sprite {
         }
     };
 
-    startAttacking(attack){
-      this.attacking = true;
-      this.animations.play(attack);
-      this.animations.currentAnim.onComplete.add(this.stopAttacking, this);
+    startAttacking(attack) {
+        this.attacking = true;
+        this.animations.play(attack);
+        this.animations.currentAnim.onComplete.add(this.stopAttacking, this);
     };
 
-    stopAttacking(){
-      this.attacking = false;
+    stopAttacking() {
+        this.attacking = false;
     };
 
     stopBeingHigh() {
-      this.isHigh = false;
+        this.isHigh = false;
     }
 
     touchHurtPlayer(enemy) {
@@ -123,12 +125,12 @@ export default class Player extends Phaser.Sprite {
             //     this._powerUpTakeHit();
             // }
             // else {
-                let direction = this.body.x - enemy.body.x; // negative is left
-                this.body.velocity.x = 150 * (direction / Math.abs(direction));
+            let direction = this.body.x - enemy.body.x; // negative is left
+            this.body.velocity.x = 150 * (direction / Math.abs(direction));
 
-                this.body.velocity.y = -150;
-                this.body.bounce.y = 0.2;
-                this._hurtPlayer(enemy.touchDamage);
+            this.body.velocity.y = -150;
+            this.body.bounce.y = 0.2;
+            this._hurtPlayer(enemy.touchDamage);
             // }
         }
     };
@@ -144,10 +146,23 @@ export default class Player extends Phaser.Sprite {
         this.health += changeInHealth;
         if (this.health <= 0) {
             this.health = 0;
-            console.log("Oh noez :(");
         }
         this.health = this.health > 10 ? 10 : this.health;
         // this.HUD.updateHealth(this.health);
+    };
+
+    canBeHurt() {
+        this.handleCharacterHurtDisplay();
+        this.returnHurt();
+    }
+
+    returnHurt() {
+        return !this.isHurt;
+    };
+
+    handleCharacterHurtDisplay() {
+        this.body.velocity.setTo(-600, 300);
+        this.animations.play("playDead");
     };
 
     _hurtPlayer(damage) {
@@ -167,14 +182,13 @@ export default class Player extends Phaser.Sprite {
             this.jumping = false;
             this.animations.play('stand');
         } else if (attackKeys.keyA.isDown && !this.attacking && !this.isHigh) {
-          this.animations.play('lowKick');
+            this.animations.play('lowKick');
         } else {
             if (cursors.left.isDown && !this.attacking && !this.isHigh) {
                 this.goLeft();
             } else if (cursors.right.isDown && !this.attacking && !this.isHigh) {
                 this.goRight();
-            }
-            else if (!this.jumping && !this.attacking && !this.isHigh) {
+            } else if (!this.jumping && !this.attacking && !this.isHigh) {
                 this.stopMoving(delta);
             }
         }
@@ -187,29 +201,29 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if(attackKeys.keyA.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-          let lowKick = this.animations.play('lowKick');
-          this.startAttacking(lowKick);
+        if (attackKeys.keyA.isDown && !this.attacking && !this.jumping && !this.isHigh) {
+            let lowKick = this.animations.play('lowKick');
+            this.startAttacking(lowKick);
         }
 
-        if(attackKeys.keyS.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-          let middleKick = 'middleKick';
-          this.startAttacking(middleKick);
+        if (attackKeys.keyS.isDown && !this.attacking && !this.jumping && !this.isHigh) {
+            let middleKick = 'middleKick';
+            this.startAttacking(middleKick);
         }
 
-        if(attackKeys.keyD.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-          let highKick = 'highKick';
-          this.startAttacking(highKick);
+        if (attackKeys.keyD.isDown && !this.attacking && !this.jumping && !this.isHigh) {
+            let highKick = 'highKick';
+            this.startAttacking(highKick);
         }
 
-        if(attackKeys.keyW.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-          let upperCut = 'upperCut';
-          this.startAttacking(upperCut);
+        if (attackKeys.keyW.isDown && !this.attacking && !this.jumping && !this.isHigh) {
+            let upperCut = 'upperCut';
+            this.startAttacking(upperCut);
         }
 
-        if(attackKeys.keySpace.isDown && !this.attacking && !this.jumping  && !this.isHigh) {
-          let kamehameha = 'kamehameha';
-          this.startAttacking(kamehameha);
+        if (attackKeys.keySpace.isDown && !this.attacking && !this.jumping && !this.isHigh) {
+            let kamehameha = 'kamehameha';
+            this.startAttacking(kamehameha);
         }
     };
 }
