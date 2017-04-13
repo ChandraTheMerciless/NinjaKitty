@@ -91,6 +91,12 @@ export default class GameState extends Phaser.State {
             item.touchItem(this.player, this.game);
         }
 
+        // let enemiesHitPlatforms = [];
+        //
+        // for (let i = 0; i < this.enemies.length; i++) {
+        //     enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);;
+        // };
+
         this.getEnemies();
         this.makeEnemiesChasePlayer();
         this.handleEnemiesHitPlayer();
