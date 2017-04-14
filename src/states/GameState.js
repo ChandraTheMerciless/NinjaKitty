@@ -32,7 +32,7 @@ export default class GameState extends Phaser.State {
 
         this.player = new Player(this.game, 200, 300);
         this.enemies.push(new TongueMonster(this.game, 500, 540));
-        this.enemies.push(new BounceMonster(this.game, 700, 540));
+        this.enemies.push(new BounceMonster(this.game, 700, 520));
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
@@ -88,17 +88,15 @@ export default class GameState extends Phaser.State {
         let deltaTime = this.getDeltaTime();
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
-        // let touchEnemies = PhysicsService.collideGroups(this.game, this.player, this.enemies);
         let hitItems = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.items, this.player);
         for (let item of hitItems) {
             item.touchItem(this.player, this.game);
         }
 
-        // let enemiesHitPlatforms = [];
-        //
-        // for (let i = 0; i < this.enemies.length; i++) {
-        //     enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);;
-        // };
+        let enemiesHitPlatforms = [];
+        for (let i = 0; i < this.enemies.length; i++) {
+            enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);;
+        };
 
         this.getEnemies();
         this.makeEnemiesChasePlayer();
@@ -106,11 +104,6 @@ export default class GameState extends Phaser.State {
 
         let cursors = this.game.input.keyboard.createCursorKeys();
         this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
-
-        //for debugging hitboxes (puts a green box behind the sprite showing the hitbox)
-        this.game.debug.body(this.player);
-        this.game.debug.body(this.enemies[0]);
-        this.game.debug.body(this.enemies[1]);
     };
 
     getDeltaTime() {
@@ -129,7 +122,7 @@ export default class GameState extends Phaser.State {
     makeEnemiesChasePlayer() {
         for (let i = 0; i < this.enemies.length; i++) {
             const distance = this.physics.arcade.distanceBetween(this.enemies[i], this.player);
-            if (distance < 200) {
+            if (distance < 200 && !this.enemies[i].didDamage) {
                 this.physics.arcade.moveToObject(this.enemies[i], this.player, 100);
             }
         };
@@ -145,7 +138,6 @@ export default class GameState extends Phaser.State {
     }
 
     handleEnemiesHitPlayer() {
-        // let hitEnemies = PhysicsService.collideGroups(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
         let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
         if (hitEnemies[0]) {
             this.player.touchHurtPlayer(hitEnemies[0]);

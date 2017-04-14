@@ -7,7 +7,7 @@ export default class TongueMonster extends Enemy {
         this.height = 128;
         this.width = 128;
 
-        this.body.setSize(this.body.width - 35, this.body.height - 32, 20, 15);
+        this.body.setSize(this.body.width - 35, this.body.height - 35, 17, 20);
         this.body.collideWorldBounds = true;
 
 

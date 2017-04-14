@@ -29,10 +29,13 @@ export default class Player extends Phaser.Sprite {
         this.rightDir = this.scale.x;
 
         this.jumping = true;
+        this.moveEnabled = true;
         this.attacking = false;
         this.isHigh = false;
         this.isHurt = false;
         this.health = 100;
+
+        this.hurtVelocity = 0;
 
         this.lives = lives;
 
@@ -57,10 +60,10 @@ export default class Player extends Phaser.Sprite {
     };
 
     updatePlayer(cursors, attackKeys, contacts, delta) {
-
-
+        if (this.isHurt) {
+            this.knockback(this.hurtVelocity);
+        }
         this._handleInput(cursors, attackKeys, contacts, delta);
-
     };
 
     jump(velocity = -500) {
@@ -122,30 +125,24 @@ export default class Player extends Phaser.Sprite {
 
     stopBeingHigh() {
         this.isHigh = false;
+        this.moveEnabled = true;
     }
 
     touchHurtPlayer(enemy) {
-        // if (enemy.doesDamage) {
-            // if (this.powerUpComponent && this.powerUpComponent.takeHit) {
-            //     this._powerUpTakeHit();
-            // }
-            // else {
-            let direction = this.body.x - enemy.body.x; // negative is left
-            this.body.velocity.x = 150 * (direction / Math.abs(direction));
-
-            this.body.velocity.y = -150;
-            this.body.bounce.y = 0.2;
-            this.body.bounce.x = 3;
-            this._hurtPlayer(enemy.touchDamage);
-            // debugger;
-            // }
-
-            this.animations.play("playDead");
-        // }
+        enemy.idleAfterAttack();
+        let direction = this.body.x - enemy.body.x; // negative is left
+        this.hurtVelocity = 125 * (direction / Math.abs(direction));
+        this.knockback(this.hurtVelocity);
+        this._hurtPlayer(enemy.touchDamage);
     };
+
+    knockback(velocity) {
+        this.body.velocity.x = velocity;
+    }
 
     getHigh() {
         this.isHigh = true;
+        this.isHurt = false;
         this.body.velocity.x = 0;
         this.animations.play('dance');
         this.animations.currentAnim.onComplete.add(this.stopBeingHigh, this);
@@ -161,85 +158,66 @@ export default class Player extends Phaser.Sprite {
     };
 
     canBeHurt() {
-        // this.handleCharacterHurtDisplay();
-        // this.returnHurt();
         return !this.isHurt;
     }
 
-    // returnHurt() {
-        // return !this.isHurt;
-    // };
-
-    // handleCharacterHurtDisplay() {
-    //     // let direction = this.body.x - enemy.body.x; // negative is left
-    //     // this.body.velocity.x = 150 * (direction / Math.abs(direction));
-    //     //
-    //     // this.body.velocity.y = -150;
-    //     // this.body.bounce.y = 0.2;
-    //     //
-    //     // // this.body.velocity.setTo(-600, 300);
-    //     // this.animations.play("playDead");
-    // };
-
     _hurtPlayer(damage) {
-        this.hurtTimer = 0;
-        // this.isHurt = true;
+        this.isHurt = true;
         this.moveEnabled = false;
 
         this.animations.stop();
-        this.frame = this.hurtFrame;
+        this.animations.play("playDead");
+        this.animations.currentAnim.onComplete.add(this.stopInvulnerability, this);
 
         this._updateHealth(-damage);
     };
 
+    stopInvulnerability() {
+        this.isHurt = false;
+        this.moveEnabled = true;
+    }
+
     _handleInput(cursors, attackKeys, contacts, delta) {
-
-        if (this.body.touching.down && this.jumping && !this.attacking && !this.isHigh) {
-            this.jumping = false;
-            this.animations.play('stand');
-        } else if (attackKeys.keyA.isDown && !this.attacking && !this.isHigh) {
-            this.animations.play('lowKick');
-        } else {
-            if (cursors.left.isDown && !this.attacking && !this.isHigh) {
-                this.goLeft();
-            } else if (cursors.right.isDown && !this.attacking && !this.isHigh) {
-                this.goRight();
-            } else if (!this.jumping && !this.attacking && !this.isHigh) {
-                this.stopMoving(delta);
+        if (this.moveEnabled && !this.attacking && !this.isHigh) {
+            if (this.body.touching.down && this.jumping) {
+                this.jumping = false;
+                this.animations.play('stand');
+            } else {
+                if (cursors.left.isDown) {
+                    this.goLeft();
+                } else if (cursors.right.isDown) {
+                    this.goRight();
+                } else if (!this.jumping) {
+                    this.stopMoving(delta);
+                }
             }
-        }
 
-        if (this.body.touching.down && cursors.up.isDown && !this.attacking && !this.isHigh) {
-            this.jump();
+            if (this.body.touching.down && cursors.up.isDown) {
+                this.jump();
+            }
         }
 
         if (this.body.touching.right || this.body.touching.left) {
             this.body.velocity.x = 0;
         }
 
-        if (attackKeys.keyA.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-            let lowKick = this.animations.play('lowKick');
-            this.startAttacking(lowKick);
+        if (!this.attacking && !this.jumping && !this.isHigh) {
+            if (attackKeys.keyA.isDown) {
+                let lowKick = this.animations.play('lowKick');
+                this.startAttacking(lowKick);
+            } else if (attackKeys.keyS.isDown) {
+                let middleKick = 'middleKick';
+                this.startAttacking(middleKick);
+            } else if (attackKeys.keyD.isDown) {
+                let highKick = 'highKick';
+                this.startAttacking(highKick);
+            } else if (attackKeys.keyW.isDown) {
+                let upperCut = 'upperCut';
+                this.startAttacking(upperCut);
+            } else if (attackKeys.keySpace.isDown) {
+                let kamehameha = 'kamehameha';
+                this.startAttacking(kamehameha);
+            }
         }
-
-        if (attackKeys.keyS.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-            let middleKick = 'middleKick';
-            this.startAttacking(middleKick);
-        }
-
-        if (attackKeys.keyD.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-            let highKick = 'highKick';
-            this.startAttacking(highKick);
-        }
-
-        if (attackKeys.keyW.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-            let upperCut = 'upperCut';
-            this.startAttacking(upperCut);
-        }
-
-        if (attackKeys.keySpace.isDown && !this.attacking && !this.jumping && !this.isHigh) {
-            let kamehameha = 'kamehameha';
-            this.startAttacking(kamehameha);
-        }
-    };
+    }
 }

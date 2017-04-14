@@ -5,15 +5,19 @@ export default class Enemy extends Phaser.Sprite {
         // Default physics options for Enemy
         game.physics.arcade.enable(this);
 
-        // this.body.gravity.y = 900;
         this.anchor.setTo(.5, .5);
 
         this.touchDamage = 0;
         this.doesDamage = true;
+        this.didDamage = false;
+        this.idleFrames = 0;
     }
 
     updateEnemy() {
         this.facePlayer();
+        if (this.didDamage) {
+            this.idle();
+        }
     }
 
     facePlayer() {
@@ -25,6 +29,20 @@ export default class Enemy extends Phaser.Sprite {
             this.scale.x = -2;
         } else {
             this.scale.x = 2;
+        }
+    }
+
+    idleAfterAttack() {
+        this.didDamage = true;
+        this.idleFrames = 0;
+        this.body.velocity.x = 0;
+    }
+
+    idle() {
+        if (this.idleFrames < 90) {
+            this.idleFrames++;
+        } else {
+            this.didDamage = false;
         }
     }
 }
