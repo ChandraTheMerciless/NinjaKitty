@@ -34,6 +34,7 @@ export default class Player extends Phaser.Sprite {
         this.isHigh = false;
         this.isHurt = false;
         this.health = 100;
+        this.attackDamage = 5;
 
         this.hurtVelocity = 0;
 
@@ -41,30 +42,30 @@ export default class Player extends Phaser.Sprite {
 
         this.HUD = new HUD(game);
         this.HUD.updateHealth(this.health);
-    };
+    }
 
     static loadPlayerImage(game) {
         game.load.spritesheet('cat_fighter_redsash', 'assets/Player/cat_fighter_redsash.png', 50, 50);
-    };
+    }
 
     isMoving() {
         return this.body.deltaX() !== 0;
-    };
+    }
 
     getDeltaMovement() {
         return this.body.deltaX();
-    };
+    }
 
     getVelocity() {
         return this.body.velocity.x;
-    };
+    }
 
     updatePlayer(cursors, attackKeys, contacts, delta) {
         if (this.isHurt) {
             this.knockback(this.hurtVelocity);
         }
         this._handleInput(cursors, attackKeys, contacts, delta);
-    };
+    }
 
     jump(velocity = -500) {
         this.body.velocity.y = velocity;
@@ -82,7 +83,7 @@ export default class Player extends Phaser.Sprite {
             this.animations.play('walk');
         }
         this.scale.x = this.leftDir;
-    };
+    }
 
     goRight(velocity = 150) {
         this.body.velocity.x = velocity;
@@ -90,7 +91,7 @@ export default class Player extends Phaser.Sprite {
             this.animations.play('walk');
         }
         this.scale.x = this.rightDir;
-    };
+    }
 
     stopMoving(delta, slowRate = 500) {
         if (this.body.velocity.x !== 0) {
@@ -111,18 +112,18 @@ export default class Player extends Phaser.Sprite {
             this.animations.play('stand');
             this.body.velocity.x = 0;
         }
-    };
+    }
 
     startAttacking(attack) {
         this.attacking = true;
         this.animations.play(attack);
         this.animations.currentAnim.onComplete.add(this.stopAttacking, this);
-    };
+    }
 
     stopAttacking() {
         this.attacking = false;
-        this.moveEnabled = true;
-    };
+//        this.moveEnabled = true;
+    }
 
     stopBeingHigh() {
         this.isHigh = false;
@@ -135,7 +136,7 @@ export default class Player extends Phaser.Sprite {
         this.hurtVelocity = 125 * (direction / Math.abs(direction));
         this.knockback(this.hurtVelocity);
         this._hurtPlayer(enemy.touchDamage);
-    };
+    }
 
     knockback(velocity) {
         this.body.velocity.x = velocity;
@@ -156,7 +157,7 @@ export default class Player extends Phaser.Sprite {
         }
         this.health = this.health > 100 ? 100 : this.health;
         this.HUD.updateHealth(this.health);
-    };
+    }
 
     canBeHurt() {
         return !this.isHurt;
@@ -164,6 +165,7 @@ export default class Player extends Phaser.Sprite {
 
     _hurtPlayer(damage) {
         this.isHurt = true;
+        this.isHigh = false;
         this.moveEnabled = false;
         this.isHigh = false;
 

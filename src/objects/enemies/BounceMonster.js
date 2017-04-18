@@ -8,12 +8,13 @@ export default class BounceMonster extends Enemy {
         this.width = 128;
         this.body.gravity.y = 10000;
 
-        this.body.setSize(this.body.width - 20, this.body.height - 20, 10, 10);
+        this.body.setSize(this.body.width - 40, this.body.height - 30, 15, 18);
         this.body.collideWorldBounds = true;
 
 
         // NOTE - sprite is 64 by 64
         this.animations.add('bouncing', [0, 1, 2, 3, 4], 10, true);
+        this.animations.add('death', [10, 11, 12, 13, 14], 10, false);
 
         // this.animations.play('flapping');
 
@@ -23,6 +24,8 @@ export default class BounceMonster extends Enemy {
         this.moveSpeed = 75;
         // this.body.velocity.x = this.direction * this.moveSpeed;
         this.scale.x *= -1;
+
+        this.health = 10;
     };
 
     static loadBounceMonsterImage(game) {
@@ -32,7 +35,9 @@ export default class BounceMonster extends Enemy {
     updateEnemy() {
         super.updateEnemy();
 
-        this.animations.play('bouncing');
+        if (this.health > 0 && !this.isHurt) {
+            this.animations.play('bouncing');
+        }
     };
 
 

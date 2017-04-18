@@ -34,7 +34,7 @@ export default class GameState extends Phaser.State {
         this.player = new Player(this.game, 200, 300);
         this.enemies.push(new TongueMonster(this.game, 2000, 540));
         this.enemies.push(new BounceMonster(this.game, 900, 520));
-        this.enemies.push(new Skeleton(this.game, 500, 540));
+        this.enemies.push(new Skeleton(this.game, 500, 520));
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
@@ -97,7 +97,7 @@ export default class GameState extends Phaser.State {
 
         let enemiesHitPlatforms = [];
         for (let i = 0; i < this.enemies.length; i++) {
-            enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);;
+            enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);
         };
 
         this.getEnemies();
@@ -124,7 +124,7 @@ export default class GameState extends Phaser.State {
     makeEnemiesChasePlayer() {
         for (let i = 0; i < this.enemies.length; i++) {
             const distance = this.physics.arcade.distanceBetween(this.enemies[i], this.player);
-            if (distance < 200 && !this.enemies[i].didDamage) {
+            if (distance < 200 && !this.enemies[i].didDamage && !this.enemies[i].isHurt) {
                 this.physics.arcade.moveToObject(this.enemies[i], this.player, 100);
             }
         };
@@ -141,8 +141,12 @@ export default class GameState extends Phaser.State {
 
     handleEnemiesHitPlayer() {
         let hitEnemies = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.enemies, this.player, null, this.player.canBeHurt, this.player);
-        if (hitEnemies[0]) {
-            this.player.touchHurtPlayer(hitEnemies[0]);
+        if (hitEnemies[0] && hitEnemies[0].health > 0) {
+            if (this.player.attacking) {
+                hitEnemies[0].hurtEnemy(this.player);
+            } else {
+                this.player.touchHurtPlayer(hitEnemies[0]);
+            }
         } else {
             for (let enemy of this.enemies) {
                 if (enemy.emitterComponent && enemy.emitterComponent.particlesDoDamage &&
