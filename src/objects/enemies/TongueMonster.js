@@ -14,7 +14,7 @@ export default class TongueMonster extends Enemy {
         // NOTE - sprite is 64 by 64
         this.animations.add('flapping', [0, 1, 2, 3, 4], 10, true);
         this.animations.add('attacking', [8, 9, 10, 11, 12], 9, true);
-        this.animations.add('exploding', [16, 17, 18, 19, 20, 21, 22, 23], 10, false);
+        this.animations.add('death', [16, 17, 18, 19, 20, 21, 22, 23], 10, false);
 
         // this.animations.play('flapping');
 
@@ -24,6 +24,8 @@ export default class TongueMonster extends Enemy {
         this.moveSpeed = 75;
         // this.body.velocity.x = this.direction * this.moveSpeed;
         this.scale.x *= -1;
+
+        this.health = 15;
     };
 
     static loadTongueMonsterImage(game) {
@@ -33,7 +35,9 @@ export default class TongueMonster extends Enemy {
     updateEnemy() {
         super.updateEnemy();
 
-        this.animations.play('flapping');
+        if (this.health > 0 && !this.isHurt) {
+            this.animations.play('flapping');
+        }
     };
 
 
