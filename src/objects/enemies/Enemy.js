@@ -70,10 +70,11 @@ export default class Enemy extends Phaser.Sprite {
 
     hurtEnemy(player) {
         this.isHurt = true;
+        this.tint = 0xff0000;
+        this.animations.stop();
         this.health = this.health - player.attackDamage;
         if (this.health <= 0) {
             this.body.velocity.x = 0;
-            this.animations.stop();
             this.animations.play("death", 10, false, true);
         } else {
             this.hurtFrames = 0;
@@ -82,8 +83,6 @@ export default class Enemy extends Phaser.Sprite {
             this.hurtVelocity = 75 * (direction / Math.abs(direction));
             this.knockback(this.hurtVelocity);
             this.normalAnimation = this.animations.currentAnim;
-            this.animations.stop();
-            this.tint = 0xff0000;
         }
     }
 

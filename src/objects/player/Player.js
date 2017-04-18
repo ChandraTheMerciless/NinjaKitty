@@ -63,8 +63,9 @@ export default class Player extends Phaser.Sprite {
     updatePlayer(cursors, attackKeys, contacts, delta) {
         if (this.isHurt) {
             this.knockback(this.hurtVelocity);
+        } else {
+          this._handleInput(cursors, attackKeys, contacts, delta);
         }
-        this._handleInput(cursors, attackKeys, contacts, delta);
     }
 
     jump(velocity = -500) {
