@@ -19,6 +19,11 @@ import PhysicsService from './PhysicsService';
 export default class GameState extends Phaser.State {
     constructor() {
         super();
+        this.monstahMap = {
+          1: BounceMonster,
+          2: TongueMonster,
+          3: Skeleton
+        };
     }
 
     preload() {
@@ -32,9 +37,10 @@ export default class GameState extends Phaser.State {
         this.createItems();
 
         this.player = new Player(this.game, 200, 300);
-        this.enemies.push(new TongueMonster(this.game, 2000, 540));
-        this.enemies.push(new BounceMonster(this.game, 900, 520));
-        this.enemies.push(new Skeleton(this.game, 500, 520));
+        // this.enemies.push(new TongueMonster(this.game, 2000, 540));
+        // this.enemies.push(new BounceMonster(this.game, 900, 520));
+        // this.enemies.push(new Skeleton(this.game, 500, 520));
+        this.createEnemies();
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
@@ -66,6 +72,19 @@ export default class GameState extends Phaser.State {
                 y = 576;
             new Platform(this.game, -75 + x, y, PlatformTypes.GRASS, PlatformSubTypes.NORMAL, this.group_platforms);
         }
+    }
+
+    createEnemies(){
+      for (let idx = 0; idx < 10; idx++) {
+          let x = 550 * (idx + 1),
+              y = 350,
+              jitter = this.getRandomIntFromInterval(25, 75);
+
+          const monstahCode = this.getRandomIntFromInterval(1, 3);
+
+          const monstah = new this.monstahMap[monstahCode](this.game, x + jitter, 520);
+          this.enemies.push(monstah);
+      }
     }
 
     createItems() {
