@@ -145,6 +145,7 @@ export default class Player extends Phaser.Sprite {
     getHigh() {
         this.isHigh = true;
         this.isHurt = false;
+        this.attacking = false;
         this.body.velocity.x = 0;
         this.animations.play('dance');
         this.animations.currentAnim.onComplete.add(this.stopBeingHigh, this);
