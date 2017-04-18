@@ -121,6 +121,7 @@ export default class Player extends Phaser.Sprite {
 
     stopAttacking() {
         this.attacking = false;
+        this.moveEnabled = true;
     };
 
     stopBeingHigh() {
@@ -164,6 +165,7 @@ export default class Player extends Phaser.Sprite {
     _hurtPlayer(damage) {
         this.isHurt = true;
         this.moveEnabled = false;
+        this.isHigh = false;
 
         this.animations.stop();
         this.animations.play("playDead");

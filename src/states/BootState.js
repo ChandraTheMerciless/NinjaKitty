@@ -4,8 +4,8 @@ import BaseMenu from '../menus/BaseMenu';
 import MainMenu from '../menus/MainMenu';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
-// import Pony from '../objects/enemies/Pony';
 import BounceMonster from '../objects/enemies/BounceMonster';
+import Skeleton from '../objects/enemies/Skeleton';
 
 export default class BootState extends Phaser.State {
     constructor() {
@@ -25,6 +25,7 @@ export default class BootState extends Phaser.State {
         Player.loadPlayerImage(this.game);
         TongueMonster.loadTongueMonsterImage(this.game);
         BounceMonster.loadBounceMonsterImage(this.game);
+        Skeleton.loadSkeletonImage(this.game);
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
     }

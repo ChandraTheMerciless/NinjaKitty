@@ -13,6 +13,7 @@ import Catnip from '../objects/items/Catnip';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
 import BounceMonster from '../objects/enemies/BounceMonster';
+import Skeleton from '../objects/enemies/Skeleton';
 import PhysicsService from './PhysicsService';
 
 export default class GameState extends Phaser.State {
@@ -31,8 +32,9 @@ export default class GameState extends Phaser.State {
         this.createItems();
 
         this.player = new Player(this.game, 200, 300);
-        this.enemies.push(new TongueMonster(this.game, 500, 540));
-        this.enemies.push(new BounceMonster(this.game, 700, 520));
+        this.enemies.push(new TongueMonster(this.game, 2000, 540));
+        this.enemies.push(new BounceMonster(this.game, 900, 520));
+        this.enemies.push(new Skeleton(this.game, 500, 540));
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
     }
