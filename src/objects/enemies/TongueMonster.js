@@ -18,7 +18,7 @@ export default class TongueMonster extends Enemy {
 
         // this.animations.play('flapping');
 
-        this.touchDamage = 5;
+        this.touchDamage = 7;
         // this.speedX = 75;
         // this.direction = -1;
         this.moveSpeed = 75;

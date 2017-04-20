@@ -22,7 +22,8 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('highKick', [0, 40, 45, 46, 40, 0], 10, false);
         this.animations.add('upperCut', [0, 4, 55, 56, 57, 58, 59], 10, false);
         this.animations.add('kamehameha', [0, 10, 11, 12, 11, 12, 11, 12, 13, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15, 14, 15], 10, false);
-        this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, false);
+        this.animations.add('hurt', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, false);
+        this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32], 10, false);
         this.animations.add('dance', [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], 8, false);
 
         this.leftDir = this.scale.x * -1;
@@ -46,6 +47,17 @@ export default class Player extends Phaser.Sprite {
 
     static loadPlayerImage(game) {
         game.load.spritesheet('cat_fighter_redsash', 'assets/Player/cat_fighter_redsash.png', 50, 50);
+    }
+
+    playDead() {
+        this.body.velocity.x = 0;
+        this.animations.stop();
+        this.animations.play('playDead');
+        this.animations.currentAnim.onComplete.add(this.stayDead, this);
+    }
+
+    stayDead() {
+        this.frame = 32;
     }
 
     isMoving() {
@@ -162,7 +174,7 @@ export default class Player extends Phaser.Sprite {
     }
 
     canBeHurt() {
-        return !this.isHurt;
+        return !this.isHurt && this.health > 0;
     }
 
     _hurtPlayer(damage) {
@@ -172,7 +184,7 @@ export default class Player extends Phaser.Sprite {
         this.isHigh = false;
 
         this.animations.stop();
-        this.animations.play("playDead");
+        this.animations.play("hurt");
         this.animations.currentAnim.onComplete.add(this.stopInvulnerability, this);
 
         this._updateHealth(-damage);

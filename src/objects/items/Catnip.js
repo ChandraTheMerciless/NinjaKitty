@@ -11,7 +11,9 @@ export default class Catnip extends Phaser.Sprite {
     }
 
     touchItem(player, item) {
-        player.getHigh();
-        this.kill();
+        if (player.health > 0) {
+            player.getHigh();
+            this.kill();
+        }
     }
 }

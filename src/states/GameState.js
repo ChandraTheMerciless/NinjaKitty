@@ -15,6 +15,9 @@ import TongueMonster from '../objects/enemies/TongueMonster';
 import BounceMonster from '../objects/enemies/BounceMonster';
 import Skeleton from '../objects/enemies/Skeleton';
 import PhysicsService from './PhysicsService';
+import {
+    ClickableButton
+} from '../menus/buttons/ClickableButton';
 
 export default class GameState extends Phaser.State {
     constructor() {
@@ -43,6 +46,9 @@ export default class GameState extends Phaser.State {
         this.createEnemies();
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
+
+        this.gameover = false;
+        this.gameover_buttons = this.game.add.group();
     }
 
     createEnvironment() {
@@ -123,8 +129,13 @@ export default class GameState extends Phaser.State {
         this.makeEnemiesChasePlayer();
         this.handleEnemiesHitPlayer();
 
-        let cursors = this.game.input.keyboard.createCursorKeys();
-        this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+        if (this.player.health > 0) {
+            let cursors = this.game.input.keyboard.createCursorKeys();
+            this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+        } else if (!this.gameover) {
+            this.gameover = true;
+            this.gameOver();
+        }
     };
 
     getDeltaTime() {
@@ -176,4 +187,34 @@ export default class GameState extends Phaser.State {
             }
         }
     };
+
+    gameOver() {
+        this.player.playDead();
+        this.gameover_buttons.add(new ClickableButton(this.game, 300, 250, 'Try Again', this.restartLevel, this));
+        this.gameover_buttons.add(new ClickableButton(this.game, 300, 350, 'Main Menu', this.backToMenu, this));
+        let text = this.gameover_buttons.add(new Phaser.Text(this.game, 0, 0, 'Game Over', {
+            boundsAlignH: "center",
+            boundsAlignV: "middle",
+            fontSize: '60px',
+            font: 'Arial',
+            strokeThickness: 8,
+            fill: '#ff5656',
+            stroke: '#d30a0a'
+        }));
+        text.setTextBounds(0, 50, 800, 100);
+        this.gameover_buttons.fixedToCamera = true;
+    }
+
+    restartLevel() {
+        this.game.state.restart();
+    }
+
+    backToMenu() {
+        this.game.state.start('main');
+    }
+
+    shutdown() {
+        this.game.world.removeAll();
+        this.gameover_buttons.removeAll(true);
+    }
 }
