@@ -98,13 +98,28 @@ export default class GameState extends Phaser.State {
     update() {
         const self = this;
 
-        const attackKeys = {
-            keyA: self.game.input.keyboard.addKey(Phaser.Keyboard.A),
-            keyS: self.game.input.keyboard.addKey(Phaser.Keyboard.S),
-            keyD: self.game.input.keyboard.addKey(Phaser.Keyboard.D),
-            keyW: self.game.input.keyboard.addKey(Phaser.Keyboard.W),
-            keySpace: self.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
-        }
+        const attackKeys = [
+            {
+              keyAdd: self.game.input.keyboard.addKey(Phaser.Keyboard.A),
+              keyCode: "lowKick"
+            },
+            {
+              keyAdd: self.game.input.keyboard.addKey(Phaser.Keyboard.S),
+              keyCode: "middleKick"
+            },
+            {
+              keyAdd: self.game.input.keyboard.addKey(Phaser.Keyboard.D),
+              keyCode: "highKick"
+            },
+            {
+              keyAdd: self.game.input.keyboard.addKey(Phaser.Keyboard.W),
+              keyCode: "upperCut"
+            },
+            {
+              keyAdd: self.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+              keyCode: "kamehameha"
+            }
+        ];
 
         let deltaTime = this.getDeltaTime();
 

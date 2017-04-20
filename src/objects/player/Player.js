@@ -34,6 +34,7 @@ export default class Player extends Phaser.Sprite {
         this.isHigh = false;
         this.isHurt = false;
         this.health = 100;
+        this.catnipCount = 0;
         this.attackDamage = 5;
 
         this.hurtVelocity = 0;
@@ -42,6 +43,7 @@ export default class Player extends Phaser.Sprite {
 
         this.HUD = new HUD(game);
         this.HUD.updateHealth(this.health);
+        this.HUD.updateCatnip(this.catnipCount);
     }
 
     static loadPlayerImage(game) {
@@ -102,7 +104,6 @@ export default class Player extends Phaser.Sprite {
 
             if ((dir === -1 && newX <= 2) ||
                 (dir === 1 && newX >= -2)) {
-                //  Stand still
                 this.animations.play('walk');
                 this.body.velocity.x = 0;
             } else {
@@ -150,6 +151,10 @@ export default class Player extends Phaser.Sprite {
         this.body.velocity.x = 0;
         this.animations.play('dance');
         this.animations.currentAnim.onComplete.add(this.stopBeingHigh, this);
+
+        this.catnipCount += 1;
+        console.log(this.catnipCount);
+        this.HUD.updateCatnip(this.catnipCount);
     }
 
     _updateHealth(changeInHealth) {
@@ -208,22 +213,12 @@ export default class Player extends Phaser.Sprite {
         }
 
         if (!this.attacking && !this.jumping && !this.isHigh) {
-            if (attackKeys.keyA.isDown) {
-                let lowKick = this.animations.play('lowKick');
-                this.startAttacking(lowKick);
-            } else if (attackKeys.keyS.isDown) {
-                let middleKick = 'middleKick';
-                this.startAttacking(middleKick);
-            } else if (attackKeys.keyD.isDown) {
-                let highKick = 'highKick';
-                this.startAttacking(highKick);
-            } else if (attackKeys.keyW.isDown) {
-                let upperCut = 'upperCut';
-                this.startAttacking(upperCut);
-            } else if (attackKeys.keySpace.isDown) {
-                let kamehameha = 'kamehameha';
-                this.startAttacking(kamehameha);
+          for(let i = 0; i < attackKeys.length; i++){
+            if (attackKeys[i].keyAdd.isDown){
+              let attack = attackKeys[i].keyCode;
+              this.startAttacking(attack);
             }
+          };
         }
     }
 }
