@@ -10,6 +10,7 @@ import {
 } from '../objects/environment/Tree';
 import Cloud from '../objects/environment/Cloud';
 import Catnip from '../objects/items/Catnip';
+import Star from '../objects/items/Star';
 import Player from '../objects/player/Player';
 import TongueMonster from '../objects/enemies/TongueMonster';
 import BounceMonster from '../objects/enemies/BounceMonster';
@@ -47,6 +48,8 @@ export default class GameState extends Phaser.State {
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player);
 
+        this.finishedLevel = false;
+        this.victoryFrames = 0;
         this.gameover = false;
         this.gameover_buttons = this.game.add.group();
     }
@@ -99,6 +102,9 @@ export default class GameState extends Phaser.State {
             let x = 600 * idx + this.getRandomIntFromInterval(100, 400, false);
             this.items.push(new Catnip(this.game, x, 520));
         }
+        let star = new Star(this.game, 5750, 300);
+        this.items.push(star);
+        this.game.add.tween(star).to({y: '+50'}, 1000, Phaser.Easing.Linear.None, true, 0, -1, true);
     }
 
     update() {
@@ -127,29 +133,35 @@ export default class GameState extends Phaser.State {
             }
         ];
 
+        if (this.player.finishedLevel) {
+            this.finishLevel();
+        }
+
         let deltaTime = this.getDeltaTime();
 
         let hitPlatforms = PhysicsService.collideGroups(this.game, this.player, this.group_platforms);
-        let hitItems = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.items, this.player);
-        for (let item of hitItems) {
-            item.touchItem(this.player, this.game);
-        }
-
         let enemiesHitPlatforms = [];
         for (let i = 0; i < this.enemies.length; i++) {
             enemiesHitPlatforms += PhysicsService.collideGroups(this.game, this.enemies[i], this.group_platforms);
         };
 
-        this.getEnemies();
-        this.makeEnemiesChasePlayer();
-        this.handleEnemiesHitPlayer();
+        if (!this.finishedLevel) {
+            let hitItems = PhysicsService.overlapSpriteArrayAndSprite(this.game, this.items, this.player);
+            for (let item of hitItems) {
+                item.touchItem(this.player, this.game);
+            }
 
-        if (this.player.health > 0) {
-            let cursors = this.game.input.keyboard.createCursorKeys();
-            this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
-        } else if (!this.gameover) {
-            this.gameover = true;
-            this.gameOver();
+            this.getEnemies();
+            this.makeEnemiesChasePlayer();
+            this.handleEnemiesHitPlayer();
+
+            if (this.player.health > 0) {
+                let cursors = this.game.input.keyboard.createCursorKeys();
+                this.player.updatePlayer(cursors, attackKeys, {}, deltaTime);
+            } else if (!this.gameover) {
+                this.gameover = true;
+                this.gameOver();
+            }
         }
     };
 
@@ -202,6 +214,20 @@ export default class GameState extends Phaser.State {
             }
         }
     };
+
+    finishLevel() {
+        if (!this.finishedLevel) {
+            this.finishedLevel = true;
+            for (let i = 0; i < this.enemies.length; i++) {
+                this.enemies[i].playDead();
+            };
+        }
+        if (this.victoryFrames < 180) {
+            this.victoryFrames++;
+        } else {
+            this.restartLevel();
+        }
+    }
 
     gameOver() {
         this.player.playDead();

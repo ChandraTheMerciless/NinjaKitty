@@ -25,6 +25,7 @@ export default class Player extends Phaser.Sprite {
         this.animations.add('hurt', [0, 1, 2, 31, 32, 33, 32, 34, 35], 10, false);
         this.animations.add('playDead', [0, 1, 2, 31, 32, 33, 32], 10, false);
         this.animations.add('dance', [1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], 8, false);
+        this.animations.add('victory', [1, 2], 10, true);
 
         this.leftDir = this.scale.x * -1;
         this.rightDir = this.scale.x;
@@ -42,6 +43,8 @@ export default class Player extends Phaser.Sprite {
 
         this.lives = lives;
 
+        this.finishedLevel = false;
+
         this.HUD = new HUD(game);
         this.HUD.updateHealth(this.health);
         this.HUD.updateCatnip(this.catnipCount);
@@ -49,6 +52,13 @@ export default class Player extends Phaser.Sprite {
 
     static loadPlayerImage(game) {
         game.load.spritesheet('cat_fighter_redsash', 'assets/Player/cat_fighter_redsash.png', 50, 50);
+    }
+
+    finishLevel() {
+        this.finishedLevel = true;
+        this.moveEnabled = false;
+        this.animations.stop();
+        this.animations.play('victory');
     }
 
     playDead() {
@@ -224,7 +234,7 @@ export default class Player extends Phaser.Sprite {
             this.body.velocity.x = 0;
         }
 
-        if (!this.attacking && !this.jumping && !this.isHigh) {
+        if (!this.attacking && !this.jumping && !this.isHigh && !this.finishedLevel) {
           for(let i = 0; i < attackKeys.length; i++){
             if (attackKeys[i].keyAdd.isDown){
               let attack = attackKeys[i].keyCode;
