@@ -11,7 +11,7 @@ const DEFAULT_BUTTON_FONT_OPTIONS = {
 };
 
 export class ClickableButton extends Phaser.Button {
-    constructor(game, x, y, label, callback, callbackContext, type, fontOptions = DEFAULT_BUTTON_FONT_OPTIONS) {
+    constructor(game, x, y, label, callback, callbackContext, type = CLICKABLE_BUTTON_TYPE.MENU, fontOptions = DEFAULT_BUTTON_FONT_OPTIONS) {
         super(game, x, y, type, callback, callbackContext, 0, 1 ,2);
         this.anchor.setTo(0, 1);
 

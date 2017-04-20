@@ -17,7 +17,7 @@ export default class Skeleton extends Enemy {
         this.animations.add('trudging', [8, 9, 10, 11], 10, true);
         this.animations.add('death', [24, 25, 26, 27, 28, 29, 30], 10, false);
 
-        this.touchDamage = 5;
+        this.touchDamage = 8;
         this.moveSpeed = 75;
         this.scale.x *= -1;
 
